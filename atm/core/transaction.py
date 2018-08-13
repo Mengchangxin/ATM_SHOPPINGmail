@@ -10,13 +10,16 @@ from core import accounts
 
 def make_transaction(log_obj,account_data,tran_type,amount,**kwargs):
     amount=float(amount)
+
     if tran_type in setting.TRANSACTION_TYPE:
+
         interest=amount*setting.TRANSACTION_TYPE[tran_type]["interest"]#计算利息
         old_balance=account_data["balance"]
         if setting.TRANSACTION_TYPE[tran_type]["action"]=="plus":
             new_balance=old_balance+amount+interest
         elif setting.TRANSACTION_TYPE[tran_type]["action"]=="minus":
             new_balance=old_balance-amount-interest
+
             if kwargs.get("re_account"):#转账用的语句。获取转账对方的账号
                 re_account_data=accounts.load_current_balance(kwargs.get("re_account"))
                 re_account_balance=re_account_data["balance"]+amount
@@ -44,6 +47,15 @@ def lock_or_not(account,flag):
     else:
         data["status"]=flag
         accounts.dump_account(data)
-        return 0
+        return flag
+def unlock_or_yes(account,flag):
+    data = accounts.load_current_balance(account)
+    if data["status"] == 1:
+        data["status"] = flag
+        accounts.dump_account(data)
+        return flag
+    else:
+        print("该账户处于正常状态。")
+
 
 

@@ -10,7 +10,7 @@ from core import logger
 from core import accounts
 from core import transaction
 from core.auth import login_required
-from bin import manage
+from core import manage_admin
 import time
 
 user_data={
@@ -81,7 +81,7 @@ def transfer(acc_data): #4、转账
     while not back_flag:
         duifang_account=input("\033[31;1m请输入对方帐户名：\033[0m").strip()
         transfer_amount=input("\033[31;1m转账金额：\033[0m").strip()
-        if duifang_account or transfer_amount=="b":
+        if duifang_account and transfer_amount=="b":
             return
         elif len(transfer_amount)>0 and transfer_amount.isdigit():
             new_blance=transaction.make_transaction(trans_logger,account_data,"transfer",transfer_amount,re_account=duifang_account)
@@ -100,7 +100,7 @@ def logout(acc_data):
 def shopping_mall_this(acc_data):
     pass
 def goto_manage():
-    manage.manage_main(user_data)
+    manage_admin.manage_main()
 def interactive(acc_data):
     menu=u'''
     --------中国银行---------
