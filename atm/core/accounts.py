@@ -17,3 +17,10 @@ def load_current_balance(account_id):
     with open(account_file, "r") as f:
         account_data = json.load(f)
         return account_data
+
+def dump_account(account_data):
+    db_path = db_handler.db_handler(setting.DATABASE)  # 返回的是数据文件路径
+    account_file = "%s/%s.json" % (db_path, account_data["id"])  # 取到数据文件的绝对地址
+    with open(account_file,"w") as f:
+        json.dump(account_data,f)
+    return True

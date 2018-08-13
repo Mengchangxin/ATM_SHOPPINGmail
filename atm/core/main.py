@@ -3,7 +3,7 @@
 #__author:Administrator
 #date:2018/7/14
 import os,sys
-BASE_DIR=os.path.dirname(o.path.dirname(os.path.abspath(__name__)))
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__name__)))
 sys.path.append(BASE_DIR)
 from core import auth
 from core import logger
@@ -33,8 +33,11 @@ def repay(acc_data):
     while not back_flag:
         repay_amount=input("\033[33;1m输入你要还款的金额：\033[0m").strip()
         if len(repay_amount)>0 and repay_amount.isdigit():
-            new_blance=transaction.make_transaction(trans_logger,account_data,'repay',repay_amount)
-
+            new_blance=transaction.make_transaction(trans_logger,account_data,'repay',repay_amount)#交易完成后得到最新数据
+            if new_blance:
+                print("\033[33;1m最新余额：%s\033[0m"%new_blance["balance"])
+        else:
+            print("\033[33;1m[%s] is not a valid amount,only accept integer!!\033[0m"%repay_amount)
 def withdraw(data):
     pass
 def transfer(data):
