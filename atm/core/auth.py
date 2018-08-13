@@ -8,7 +8,18 @@ sys.path.append(BASE_DIR)
 from core import db_handler
 from conf import setting
 from core import logger
-import json,time
+import json,time,functools
+
+
+#做一个登陆装饰器
+def login_required(func):
+    @functools.wraps(func)
+    def wrapper(*args,**kwargs):
+        if args[0].get('is_authenticated'):
+            return func(*args,**kwargs)
+        else:
+            exit("用户认证失败")
+    return wrapper
 
 
 #第二步，做一个用户认证功能
@@ -18,12 +29,12 @@ import json,time
 def acc_auth(account,password):
     db_path=db_handler.db_handler(setting.DATABASE)#返回的是数据文件路径
     account_file="%s/%s.json"%(db_path,account)#取到数据文件的绝对地址
-    print(account_file)#打印一下地址
+    #print(account_file)                                   #打印一下地址
     if os.path.isfile(account_file):
         with open(account_file,"r") as f:
             account_data=json.load(f)
             if account_data["password"]==password:
-                exp_time_stamp=time.mktime(time.strptime(account_data["expir_date"]))
+                exp_time_stamp=time.mktime(time.strptime(account_data["expir_date"],'%Y-%m-%d'))
                 if time.time()>exp_time_stamp:
                     print("\033[32;1m账户%s已经过期，请联系管理人处理。：\033[0m"%account)
                 else:
@@ -40,6 +51,7 @@ def acc_login(user_data,log_obj):#用户验证函数
         if auth:
             user_data["is_authenticated"]=True
             user_data["account_id"]=account
+            log_obj.info("账户 %s 登陆登陆成功"%account)
             return auth
         retry_count+=1
     else:

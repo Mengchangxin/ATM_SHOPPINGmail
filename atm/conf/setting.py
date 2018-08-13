@@ -27,3 +27,4 @@ TRANSACTION_TYPE = {
     'transfer':{'action':'minus','interest':0.05},#转账是降低可用余额
     'consume':{'action':'minus','interest':0},
 }
+print(BASE_DIR)
