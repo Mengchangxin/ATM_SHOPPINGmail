@@ -5,6 +5,9 @@
 import os,sys
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__name__)))
 sys.path.append(BASE_DIR)
+
+
+
 from core import auth
 from core import logger
 from core import accounts
@@ -12,6 +15,7 @@ from core import transaction
 from core.auth import login_required
 from core import manage_admin
 import time
+
 
 user_data={
     'account_id':None,#账号id
@@ -26,7 +30,16 @@ access_logger=logger.logger('access')      #登录logger
 
 @login_required
 def account_info(acc_data):
-    print(user_data)
+    account_data = accounts.load_current_balance(acc_data['account_id'])
+    current_balance = """
+        ------卡   基本信息 ---------
+        卡号:        %s
+        信用额度：    %s
+        可用额度:    %s
+        开卡时间：   %s
+        过期时间：   %s
+        """ % (account_data['id'],account_data["credit"], account_data['balance'],account_data["enroll_date"],account_data["expir_date"])
+    print(current_balance)
 @login_required
 def repay(acc_data):
     #取出最新的数据，为了保证数据的安全
@@ -97,8 +110,17 @@ def pay_check(acc_data):
 @login_required
 def logout(acc_data):
     exit("程序已退出")
+ #############################################
 def shopping_mall_this(acc_data):
-    pass
+    account_data = accounts.load_current_balance(acc_data['account_id'])#取得最新数据
+    saving=account_data["balance"]#得到可用额度
+    surplus_amount=main.shopping_action(saving)#需要返回 消费的金额
+    new_blance = transaction.make_transaction(trans_logger, account_data, 'consume', surplus_amount)  # 交易完成后得到最新数据
+    if new_blance:
+        print("\033[33;1m最新余额：%s\033[0m" % new_blance["balance"])
+
+###############################################
+
 def goto_manage():
     manage_admin.manage_main()
 def interactive(acc_data):
@@ -158,7 +180,12 @@ def run():
     if user_data['is_authenticated']: #确认是否验证
         user_data["account_data"]=acc_data
         #interactive(user_data)##把user_data里的所有数据传入菜单函数，进行下一步操作
-        atm_shoping_menu(user_data)
+        #atm_shoping_menu(user_data)#接入商场菜单
+        if acc_data["role"]==0 or acc_data["role"]=="0":#role  0 管理员    1是普通用户
+            goto_manage()
+        if acc_data["role"]==1 or acc_data["role"]=="1":
+            atm_shoping_menu(user_data)
+
 
 
 

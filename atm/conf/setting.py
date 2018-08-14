@@ -25,6 +25,6 @@ TRANSACTION_TYPE = {
     'repay':{'action':'plus','interest':0},#还款
     'withdraw':{'action':'minus','interest':0.05},#取现是降低可用余额
     'transfer':{'action':'minus','interest':0.05},#转账是降低可用余额
-    'consume':{'action':'minus','interest':0},
+    'consume':{'action':'minus','interest':0},   #消费
 }
-print(BASE_DIR)
+

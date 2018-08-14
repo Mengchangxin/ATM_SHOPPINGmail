@@ -8,6 +8,7 @@
 #from core.auth import login_required
 from core import accounts
 from core import transaction
+
 #解冻账户
 def unblock_account():
     user_input = input("请输入你要解冻的用户：")
@@ -32,7 +33,6 @@ def block_account():
     if val == 1:
         print("冻结成功！")
         return
-
 #添加账户、用户额度
 def add_account():
     account = {
@@ -68,7 +68,7 @@ def add_account():
         7: "status",
         8:"role"
     }
-    for i in range(9):
+    for i in range(7):
         data = input("%s" % menu[i]).strip()
         account['%s' % menu_user[i]] = data
 
@@ -76,9 +76,6 @@ def add_account():
     accounts.dump_account(account)#写入文件
     print("创建成功！")
     return
-
-
-
 def logout():
     exit("程序退出！")
 #管理界面主程序

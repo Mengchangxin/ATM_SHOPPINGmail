@@ -7,3 +7,4 @@
 2018-08-13 16:09:26,209 - transaction - INFO - account:123456789 action:repay   amount:200.0    interest:0.0 
 2018-08-13 16:13:06,659 - transaction - INFO - account:1234 action:transfer   amount:1000.0    interest:50.0 
 2018-08-13 16:15:03,985 - transaction - INFO - account:1234 action:repay   amount:400.0    interest:0.0 
+2018-08-14 09:11:10,467 - transaction - INFO - account:1234 action:transfer   amount:1000.0    interest:50.0 
